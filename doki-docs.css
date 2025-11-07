@@ -7,13 +7,14 @@ body {
 	word-break: break-word;
 }
 
-a {
+a, doki-link {
 	color: #4b9afb;
 	cursor: pointer;
 	text-decoration: none;
 	transition color 0.3s;
+	font-weight: bold;
 }
-a:active {
+a:active, doki-link:active {
 	color: #0a5fc6;
 	text-decoration: underline;
 }
@@ -170,33 +171,6 @@ doki-iframe {
   margin: 1em 0;
 }
 
-doki-table {
-  display: table;
-  width: 100%;
-  border-collapse: collapse;
-  margin: 1em 0;
-}
-
-doki-table-row {
-  display: table-row;
-}
-
-doki-table-cell {
-  display: table-cell;
-  padding: 0.5em;
-  border: 1px solid #ddd;
-  vertical-align: top;
-}
-
-doki-table-header {
-  display: table-cell;
-  padding: 0.5em;
-  border: 1px solid #ddd;
-  background-color: #f5f5f5;
-  font-weight: bold;
-  text-align: center;
-}
-
 doki-citation {
   display: block;
   font-style: italic;
@@ -215,11 +189,10 @@ doki-credit {
 
 doki-footer {
   display: block;
-  margin-top: 2em;
-  padding-top: 1em;
-  border-top: 1px solid #eee;
+  padding: 1em;
   color: #666;
   font-size: 0.9em;
+  text-align: center;
 }
 
 doki-tab {
@@ -397,6 +370,81 @@ doki-code-block {
   background: #4CAF50;
   color: white;
   border-color: #4CAF50;
+}
+
+/* Table Container for Horizontal Scrolling */
+doki-table-container {
+  display: block;
+  width: 100%;
+  margin: 1em 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+doki-table {
+  display: table;
+  width: auto; /* Changed from 100% to auto */
+  min-width: calc(100% - 1px); /* Ensure it takes at least full width */
+  border-collapse: collapse;
+  margin: 0; /* Remove margin since container handles it */
+  word-break: keep-all;
+  word-wrap: normal;
+  overflow-wrap: normal;
+  hyphens: manual;
+  white-space: nowrap; /* Prevent line breaks within table cells */
+}
+
+doki-table-row {
+  display: table-row;
+}
+
+doki-table-cell {
+  display: table-cell;
+  padding: 0.5em;
+  border: 1px solid #ddd;
+  vertical-align: top;
+  white-space: normal; /* Allow normal wrapping within cells */
+  word-break: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  min-width: 50px; /* Minimum cell width */
+}
+
+doki-table-header {
+  display: table-cell;
+  padding: 0.5em;
+  border: 1px solid #ddd;
+  background-color: #f5f5f5;
+  font-weight: bold;
+  text-align: center;
+  white-space: normal; /* Allow normal wrapping within headers */
+  word-break: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  min-width: 50px; /* Minimum header width */
+}
+
+/* Responsive behavior - only scroll when necessary */
+@media (max-width: 768px) {
+  doki-table-container {
+    overflow-x: auto; /* Force scrolling on mobile */
+  }
+  
+  doki-table {
+    white-space: nowrap; /* Ensure table doesn't wrap on mobile */
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  doki-table-header { 
+    background-color: #444; 
+    border-color: #666; 
+  }
+  doki-table-cell { 
+    border-color: #666; 
+  }
 }
 
 /* Prettify.js Theme */

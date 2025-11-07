@@ -229,34 +229,34 @@
     }
 
     createTable(content, args) {
-      const element = document.createElement("doki-table");
-      const rows = content.trim().split("\n");
-
+      // Create container for horizontal scrolling
+      const container = document.createElement('doki-table-container');
+      const element = document.createElement('doki-table');
+      
+      const rows = content.trim().split('\n');
+      
       rows.forEach((row, rowIndex) => {
-        const rowElement = document.createElement("doki-table-row");
-        const cells = row
-          .trim()
-          .slice(1, -1)
-          .split("|")
-          .map(cell => cell.trim());
-
+        const rowElement = document.createElement('doki-table-row');
+        const cells = row.trim().slice(1, -1).split('|').map(cell => cell.trim());
+        
         cells.forEach((cell, cellIndex) => {
           let cellElement;
-
-          if (rowIndex === 0 && args.includes("header")) {
-            cellElement = document.createElement("doki-table-header");
+          
+          if (rowIndex === 0 && args.includes('header')) {
+            cellElement = document.createElement('doki-table-header');
           } else {
-            cellElement = document.createElement("doki-table-cell");
+            cellElement = document.createElement('doki-table-cell');
           }
-
+          
           cellElement.innerHTML = this.processContent(cell);
           rowElement.appendChild(cellElement);
         });
-
+        
         element.appendChild(rowElement);
       });
-
-      return element;
+      
+      container.appendChild(element);
+      return container;
     }
 
     processContent(content) {
