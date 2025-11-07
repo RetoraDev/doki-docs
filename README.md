@@ -1,15 +1,5 @@
 # DokiDocs Web Documentation
 
-## Key Features:
-
-1. Dual Environment Support: Works in both Node.js and browsers
-2. Extensible Tag System: Register custom tags with registerTag()
-3. Syntax Highlighting: Integrated with Google's Prettify.js
-4. Table Support: Easy table syntax with header support
-5. Media Support: Images, videos, iframes
-6. Styling: Comprehensive CSS with dark mode support
-7. No Dependencies: Self-contained
-
 ## Usage:
 
 ### Browser
