@@ -133,10 +133,24 @@ doki-code-block {
   border: 1px solid #ddd;
   border-radius: 4px;
   overflow-x: auto;
+  white-space: nowrap;
+}
+
+doki-code-block pre {
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  white-space: pre;
 }
 
 doki-code-block code {
-  white-space: pre-wrap;
+  display: block;
+  white-space: pre;
+  overflow: visible;
+  word-wrap: normal;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
 }
 
 doki-link {

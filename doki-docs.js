@@ -74,7 +74,7 @@
         code.textContent = content;
       } else {
         // Normalize indentation by removing common leading whitespace
-        const normalizedContent = this.normalizeCodeIndentation(content);
+        const normalizedContent = this.normalizeCodeBlock(content);
         code.textContent = normalizedContent;
       }
 
@@ -92,36 +92,56 @@
       return element;
     }
     
-    normalizeCodeIndentation(content) {
-      if (!content) return content;
+    normalizeCodeBlock(content) {
+      if (!content) return '';
       
-      const lines = content.split('\n');
+      let lines = content.split('\n');
       
-      // Find the minimum indentation (excluding empty lines)
+      // Trim empty lines from start and end
+      while (lines.length > 0 && lines[0].trim() === '') {
+        lines.shift();
+      }
+      while (lines.length > 0 && lines[lines.length - 1].trim() === '') {
+        lines.pop();
+      }
+      
+      if (lines.length === 0) return '';
+      
+      // Special case: if we only have one line, just trim it
+      if (lines.length === 1) {
+        return lines[0].trim();
+      }
+      
+      // Find the minimum indentation from non-empty lines (excluding the very first line)
       let minIndent = Infinity;
-      
-      for (const line of lines) {
-        if (line.trim().length === 0) continue; // Skip empty lines
-        
-        const leadingSpaces = line.match(/^(\s*)/)[0].length;
-        if (leadingSpaces < minIndent) {
-          minIndent = leadingSpaces;
+      for (let i = 1; i < lines.length; i++) { // Start from second line
+        const line = lines[i];
+        if (line.trim().length === 0) continue;
+        const indent = line.match(/^[ \t]*/)[0].length;
+        if (indent < minIndent) {
+          minIndent = indent;
         }
       }
       
-      // If no meaningful indentation found, return original content
-      if (minIndent === Infinity || minIndent === 0) {
-        return content;
+      // If we didn't find any indentation in subsequent lines, use the first line's indentation
+      if (minIndent === Infinity) {
+        minIndent = lines[0].match(/^[ \t]*/)[0].length;
       }
       
-      // Remove the common indentation from all lines
+      // Ensure we don't remove more characters than any line has
       const normalizedLines = lines.map(line => {
-        if (line.trim().length === 0) return line; // Keep empty lines as-is
-        return line.substring(minIndent);
+        if (!line.startsWith(" ")) return line;
+        
+        if (line.trim().length === 0) {
+          return line;
+        }
+        // Only remove up to the actual length of the line
+        const removeCount = Math.min(minIndent, line.length);
+        return line.substring(removeCount);
       });
       
-      return normalizedLines.join('\n').trim();
-    }
+      return normalizedLines.join('\n');
+    }    
     
     createList(content, args) {
       const element = document.createElement('doki-list');
@@ -391,14 +411,7 @@
             e.setAttribute('translate', 'no');
           }
           
-          if (window.PR && typeof window.PR.prettyPrint === 'function') {
-            window.PR.prettyPrint();
-            
-            // Reattach event listeners after prettify modifies DOM
-            setTimeout(() => {
-              this.reattachEventListeners();
-            }, 100);
-          }
+          this.attachCopyButtons();
         };
     
         prettify.onerror = () => {
