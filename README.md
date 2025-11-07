@@ -54,6 +54,12 @@ function helloWorld() {
 </html>
 ```
 
+You can also import it from [jsDelivr](https://www.jsdelivr.com/package/npm/doki-docs)
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/RetoraDev/doki-docs@main/doki-docs.css">
+<script src="https://cdn.jsdelivr.net/gh/RetoraDev/doki-docs@main/doki-docs.js"></script>
+```
+
 ### Node.js:
 
 You can require DokiDocs as a module. Note that it is made for browser environments where `document` is defined, for example nw.js or a website served with Node.JS.
@@ -88,11 +94,11 @@ The framework automatically processes the document when loaded in a browser and 
 
 DokiDocs expects some important files to be in their place, following the following structure:
 ```plaintext
-.
-├── doki-docs.css
+
+├── doki-docs.css        # Core styling for DokiDocs components and themes
 ├── prettify
-│   ├── prettify.css
-└   └── prettify.js
+│   ├── prettify.css     # Syntax highlighting styles for code blocks
+└   └── prettify.js      # Google's code prettifier for syntax highlighting
 ```
 
 # License
