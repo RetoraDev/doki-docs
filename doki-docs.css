@@ -1,10 +1,80 @@
-/* Minimal CSS reset */
+/* HTML Styles */
 body {
   color: black;
 	overflow: auto;
 	margin: 0 auto;
 	padding: 24px;
 	word-break: break-word;
+}
+
+a {
+	color: #4b9afb;
+	cursor: pointer;
+	text-decoration: none;
+	transition color 0.3s;
+}
+a:active {
+	color: #0a5fc6;
+	text-decoration: underline;
+}
+
+h1 {
+	font-size: 40px;
+	line-height: 48px;
+	font-weight: normal;
+	margin-left: -2px;
+	margin-top: 16px;
+	margin-bottom: -8px;
+}
+
+h2 {
+	font-size: 28px;
+	line-height: 36px;
+	font-weight: normal;
+	margin-left: -1px;
+	margin-top: 28px;
+	margin-bottom: -8px;
+}
+
+h3 {
+	font-size: 20px;
+	line-height: 28px;
+	font-weight: normal;
+	margin-top: 24px;
+	margin-bottom: -8px;
+}
+
+p,
+div,
+table,
+ol,
+ul,
+summary {
+	margin-top: 16px;
+	margin-bottom: 16px;
+}
+
+summary:hover {
+	cursor: pointer;
+}
+
+p {
+	padding-right: 16px;
+}
+
+ul, ol {
+	box-sizing: border-box;
+	padding-left: 24px;
+}
+ul li,
+ol li {
+	padding-left: 4px;
+	margin-bottom: 4px;
+}
+
+li ul,
+li ol {
+	margin-top: 4px;
 }
 
 /* DokiDocs Base Styles */
@@ -210,7 +280,7 @@ pre.prettyprint, code.prettyprint {
 
 @media (prefers-color-scheme: dark) {
   body {
-    background-color: #222222;
+    background-color: #262626;
     color: #eee;
   }
   doki-title { color: #fff; }
@@ -233,6 +303,18 @@ pre.prettyprint, code.prettyprint {
   doki-frame { background-color: #2d2d2d; border-color: #444; }
   
   doki-note, doki-warning, doki-danger {
-    color: #222222;
+    color: #eee;
+  }
+  
+  doki-note {
+    background-color: #074692;
+  }
+  
+  doki-warning {
+    background-color: #dc6a0e;
+  }
+  
+  doki-danger {
+    background-color: brown;
   }
 }
