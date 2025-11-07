@@ -2,44 +2,168 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>DokiDocs Example</title>
+    <title>DokiDocs Documentation & Demo</title>
     <link rel="stylesheet" href="doki-docs.css">
 </head>
 <body class="doki-hidden">
-    [title: "My Documentation"]
+    [title: "DokiDocs Documentation"]
     
     [heading: "Introduction"]
+    <p>DokiDocs is a lightweight documentation framework that converts simple markup tags into styled HTML components. This page serves as both documentation and a live demo of all available features.</p>
     
-    [subheading: "Code Example"]
-    [codeblock js]
-function helloWorld() {
-  console.log("Hello, World!");
-  return true;
+    [heading: "Basic Text Elements"]
+    
+    [subheading: "Headings"]
+    <p>Use title, heading, and subheading tags to structure your content:</p>
+    
+    [title: "This is a Title"]
+    [heading: "This is a Heading"]
+    [subheading: "This is a Subheading"]
+    
+    [subheading: "Paragraphs and Text Formatting"]
+    <p>You can use regular HTML paragraphs or DokiDocs inline elements within your content. For example, you can include [code: "inline code"] snippets and [link: "clickable links" https://example.com] directly in your text.</p>
+    
+    [heading: "Code Examples"]
+    
+    [subheading: "Inline Code"]
+    <p>Use the code tag for short code snippets: [code: "const variable = 'value'"]</p>
+    
+    [subheading: "Code Blocks"]
+    <p>For larger code examples, use codeblock with optional language specification:</p>
+    
+    [codeblock javascript]
+function calculateSum(a, b) {
+    // This is a comment
+    const result = a + b;
+    console.log("The sum is: " + result);
+    return result;
 }
     [/codeblock]
-
-    [subheading: "List Example"]
+    
+    [codeblock html]
+<div class="container">
+    <h1>Hello World</h1>
+    <p>This is an HTML example</p>
+</div>
+    [/codeblock]
+    
+    [heading: "Lists"]
+    
+    [subheading: "Unordered Lists"]
+    <p>Create bulleted lists using various markers:</p>
+    
     [list]
-    * Item 1
-    * Item 2
-    * Item 3
+    - Dash bullet item
+    - Another item with dash
+    - Third list element
     [/list]
     
-    [subheading: "Table Example"]
+    [list]
+    • Circular bullet item
+    • Second circular item
+    • Final circular item
+    [/list]
+    
+    [list]
+    * Hollow bullet style
+    * Another hollow item
+    * Last hollow item
+    [/list]
+    
+    [subheading: "Ordered Lists"]
+    <p>Create numbered lists with different formats:</p>
+    
+    [list]
+    1. First item with dot
+    2. Second item with dot
+    3. Third item with dot
+    [/list]
+    
+    [list]
+    1) Parenthesis format
+    2) Second item
+    3) Third item
+    [/list]
+    
+    [heading: "Tables"]
+    
+    [subheading: "Basic Table"]
+    <p>Create structured data tables with the table tag:</p>
+    
     [table header]
-    [ Name | Age | Occupation ]
-    [ John Doe | 30 | Developer ]
-    [ Jane Smith | 25 | Designer ]
+    [ Framework | Language | Popularity ]
+    [ React | JavaScript | High ]
+    [ Vue | JavaScript | Medium ]
+    [ Angular | TypeScript | High ]
     [/table]
     
-    [note: "This is an important note!"]
+    [subheading: "Complex Table"]
+    <p>Tables can contain various content types and automatically handle responsive scrolling:</p>
     
-    [warning: "Be careful with this operation!"]
+    [table header]
+    [ Feature | Description | Status | Version ]
+    [ Syntax Highlighting | Automatic code coloring with prettify.js | ✅ Implemented | 1.0 ]
+    [ Responsive Tables | Horizontal scrolling for wide tables | ✅ Implemented | 1.0 ]
+    [ Dark Mode | Automatic theme switching | ✅ Implemented | 1.0 ]
+    [ Custom Tags | Extensible tag system | ✅ Implemented | 1.0 ]
+    [/table]
     
-    [danger: "Be extremely careful with this method"]
+    [heading: "Media Elements"]
     
-    [subheading: "Image Example"]
-    [image: "https://picsum.photos/400/200" alt="Example image"]
+    [subheading: "Images"]
+    <p>Embed images with optional alt text and sizing:</p>
+    
+    [image: "https://picsum.photos/600/300" alt="Demo image from picsum"]
+    
+    [subheading: "Links"]
+    <p>Create internal and external links:</p>
+    
+    <p>External link: [link: "Visit Example.com" https://example.com]</p>
+    <p>Internal link: [link: "Back to Top" #top]</p>
+    
+    [heading: "Alert Boxes"]
+    
+    [subheading: "Information Notes"]
+    [note: "This is a note box for important information that users should pay attention to but doesn't indicate any problems."]
+    
+    [subheading: "Warnings"]
+    [warning: "This is a warning box that indicates potential issues or important considerations that users should be aware of before proceeding."]
+    
+    [subheading: "Danger Alerts"]
+    [danger: "This is a danger box that indicates critical information, potential data loss, or irreversible actions. Users should proceed with extreme caution."]
+    
+    [heading: "Special Elements"]
+    
+    [subheading: "Citations"]
+    [citation: "The most profound technologies are those that disappear. They weave themselves into the fabric of everyday life until they are indistinguishable from it." - Mark Weiser]
+    
+    [subheading: "Credits"]
+    [credit: "Documentation generated using DokiDocs v1.0. Syntax highlighting powered by Google's prettify.js."]
+    
+    [subheading: "Frames"]
+    [frame]
+    This is a framed content area useful for highlighting specific information or creating separated content sections within your documentation.
+    [/frame]
+    
+    [subheading: "Tabs"]
+    [tab]
+    Indented content useful for code examples, nested information, or creating visual hierarchy in your documentation structure.
+    [/tab]
+    
+    [heading: "Features Summary"]
+    
+    [table header]
+    [ Feature | Description | Example ]
+    [ No Dependencies | Works without any external libraries | Self-contained framework ]
+    [ Custom Syntax | Simple bracket-based markup | [tag: "content"] ]
+    [ Extensible | Add custom tags easily | doki.registerTag() ]
+    [ Responsive | Works on all screen sizes | Mobile-friendly tables ]
+    [ Dark Mode | Automatic theme detection | CSS media queries ]
+    [ Syntax Highlighting | Built-in code formatting | prettify.js integration ]
+    [/table]
+    
+    [footer: "&copy; Retora 2025"]
+    
     <script src="doki-docs.js"></script>
 </body>
 </html>

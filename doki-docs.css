@@ -158,10 +158,18 @@ doki-image {
   border-radius: 4px;
 }
 
+doki-image img {
+  width: 100%;
+}
+
 doki-video {
   display: block;
   max-width: 100%;
   margin: 1em auto;
+}
+
+doki-video video {
+  width: 100%;
 }
 
 doki-iframe {

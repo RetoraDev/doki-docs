@@ -170,7 +170,8 @@
 
     createImage(content, args) {
       const element = document.createElement("doki-image");
-      element.src = content;
+      const image = document.createElement("img");
+      image.src = content;
 
       args.forEach(arg => {
         if (arg.startsWith("width=")) {
@@ -178,9 +179,11 @@
         } else if (arg.startsWith("height=")) {
           element.style.height = arg.split("=")[1];
         } else if (arg.startsWith("alt=")) {
-          element.alt = arg.split("=")[1];
+          image.alt = arg.split("=")[1];
         }
       });
+      
+      element.appendChild(image);
 
       return element;
     }
@@ -311,31 +314,71 @@
     }
 
     applySyntaxHighlighting() {
-      // Load prettify.js dynamically
-      const styleBase = document.createElement("link");
-      styleBase.href = "./prettify/prettify.css";
-      styleBase.rel = "stylesheet";
-
-      document.head.appendChild(styleBase);
-
-      const prettify = document.createElement("script");
-      prettify.src = "./prettify/prettify.js";
+      // Get the script element that loaded doki-docs.js
+      const scripts = document.getElementsByTagName('script');
+      let scriptPath = '';
       
-      prettify.onload = () => {
-        const elements = document.getElementsByTagName('code');
-        
-        for (let i = 0; i < elements.length; i++) {
-          const e = elements[i];
-          e.currentStyle = { 'whiteSpace': 'pre-wrap' }; // Workaround for Firefox
-          e.className += ' prettyprint';
-          e.setAttribute('translate', 'no');
+      // Find the doki-docs.js script to get its location
+      for (let i = 0; i < scripts.length; i++) {
+        const src = scripts[i].src;
+        if (src && src.includes('doki-docs.js')) {
+          scriptPath = src.substring(0, src.lastIndexOf('/') + 1);
+          break;
         }
-        
-        // Attach copy buttons after prettify might have modified the DOM
-        this.attachCopyButtons();
+      }
+      
+      const loadPrettify = (basePath) => {
+        // Load prettify.js dynamically
+        const styleBase = document.createElement('link');
+        styleBase.href = basePath + 'prettify/prettify.css';
+        styleBase.rel = 'stylesheet';
+    
+        const styleCustom = document.createElement('link');
+        styleCustom.href = basePath + 'prettify/theme.css';
+        styleCustom.rel = 'stylesheet';
+    
+        document.head.appendChild(styleBase);
+        document.head.appendChild(styleCustom);
+    
+        const prettify = document.createElement('script');
+        prettify.src = basePath + 'prettify/prettify.js';
+    
+        prettify.onload = () => {
+          const elements = document.getElementsByTagName('code');
+          
+          for (let i = 0; i < elements.length; i++) {
+            const e = elements[i];
+            e.currentStyle = { 'whiteSpace': 'pre-wrap' }; // Workaround for Firefox
+            e.className += ' prettyprint';
+            e.setAttribute('translate', 'no');
+          }
+          
+          if (window.PR && typeof window.PR.prettyPrint === 'function') {
+            window.PR.prettyPrint();
+            
+            // Reattach event listeners after prettify modifies DOM
+            setTimeout(() => {
+              this.reattachEventListeners();
+            }, 100);
+          }
+        };
+    
+        prettify.onerror = () => {
+          console.warn('Failed to load prettify from local path, trying CDN fallback...');
+          // Fallback to CDN
+          loadPrettify('https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/');
+        };
+    
+        document.head.appendChild(prettify);
       };
-
-      document.head.appendChild(prettify);
+    
+      // Start loading from script location
+      if (scriptPath) {
+        loadPrettify(scriptPath);
+      } else {
+        // Fallback to current directory
+        loadPrettify('./');
+      }
     }
     
     attachCopyButtons() {
