@@ -38,7 +38,8 @@
 
         // Block tags
         codeblock: (content, args) => this.createCodeBlock(content, args),
-        table: (content, args) => this.createTable(content, args)
+        table: (content, args) => this.createTable(content, args),
+        list: (content, args) => this.createList(content, args)
       };
     }
 
@@ -78,6 +79,68 @@
       code.setAttribute("translate", "no");
       
       element.appendChild(code);
+      
+      element.inline = inline || false;
+      
+      return element;
+    }
+    
+    createList(content, args) {
+      const element = document.createElement('doki-list');
+      const items = content.trim().split('\n').filter(item => item.trim());
+      
+      // Determine list type and format
+      const firstItem = items[0]?.trim() || '';
+      let listType = 'unordered';
+      let bulletType = '*';
+      let numberFormat = '#.';
+      
+      // Detect list type from first item
+      if (firstItem.match(/^\d+[\.\)\-]/)) {
+        listType = 'ordered';
+        
+        // Detect number format
+        if (firstItem.match(/^\d+\./)) {
+          numberFormat = '#.';
+        } else if (firstItem.match(/^\d+\)\./)) {
+          numberFormat = '(#).';
+        } else if (firstItem.match(/^\d+\)/)) {
+          numberFormat = '(#)';
+        } else if (firstItem.match(/^\d+\)-/)) {
+          numberFormat = '(#)-';
+        } else if (firstItem.match(/^\d+-/)) {
+          numberFormat = '#-';
+        }
+      } else {
+        // Detect bullet type for unordered lists
+        const firstChar = firstItem.charAt(0);
+        if (['-', '•', '*', '~'].includes(firstChar)) {
+          bulletType = firstChar;
+        }
+      }
+      
+      element.setAttribute('data-type', listType);
+      if (listType === 'unordered') {
+        element.setAttribute('data-bullet', bulletType);
+      } else {
+        element.setAttribute('data-format', numberFormat);
+      }
+      
+      // Process list items
+      items.forEach(item => {
+        const listItem = document.createElement('doki-list-item');
+        
+        // Remove the bullet/number prefix and trim
+        let itemContent = item.trim();
+        if (listType === 'unordered') {
+          itemContent = itemContent.substring(1).trim();
+        } else {
+          itemContent = itemContent.replace(/^(\d+[\.\)\-]\s*)/, '').trim();
+        }
+        
+        listItem.innerHTML = this.processContent(itemContent);
+        element.appendChild(listItem);
+      });
       
       return element;
     }
@@ -257,8 +320,57 @@
 
       const prettify = document.createElement("script");
       prettify.src = "./prettify/prettify.js";
+      
+      prettify.onload = () => {
+        const elements = document.getElementsByTagName('code');
+        
+        for (let i = 0; i < elements.length; i++) {
+          const e = elements[i];
+          e.currentStyle = { 'whiteSpace': 'pre-wrap' }; // Workaround for Firefox
+          e.className += ' prettyprint';
+          e.setAttribute('translate', 'no');
+        }
+        
+        // Attach copy buttons after prettify might have modified the DOM
+        this.attachCopyButtons();
+      };
 
       document.head.appendChild(prettify);
+    }
+    
+    attachCopyButtons() {
+      const codeBlocks = document.querySelectorAll('doki-code-block');
+      codeBlocks.forEach(block => {
+        // Check if copy button already exists
+        if (!block.querySelector('.doki-copy-button')) {
+          const code = block.querySelector('code');
+          if (code) {
+            const content = code.textContent;
+            const copyButton = document.createElement('button');
+            copyButton.className = 'doki-copy-button';
+            copyButton.textContent = 'Copy';
+            copyButton.setAttribute('aria-label', 'Copy code to clipboard');
+            
+            copyButton.addEventListener('click', async () => {
+              try {
+                await navigator.clipboard.writeText(content);
+                copyButton.textContent = 'Copied!';
+                copyButton.classList.add('copied');
+                
+                setTimeout(() => {
+                  copyButton.textContent = 'Copy';
+                  copyButton.classList.remove('copied');
+                }, 500);
+              } catch (err) {
+                console.error('Failed to copy code: ', err);
+                // Fallback implementation remains the same...
+              }
+            });
+            
+            block.appendChild(copyButton);
+          }
+        }
+      });
     }
 
     registerTag(tagName, handler) {

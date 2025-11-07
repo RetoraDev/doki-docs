@@ -264,6 +264,141 @@ doki-danger {
   border-radius: 0 4px 4px 0;
 }
 
+/* List Styles */
+doki-list {
+  display: block;
+  margin: 1em 0;
+  padding-left: 1.5em;
+}
+
+doki-list[data-type="unordered"] {
+  list-style-type: disc;
+}
+
+doki-list[data-type="unordered"][data-bullet="-"] {
+  list-style-type: none;
+  padding-left: 1em;
+}
+
+doki-list[data-type="unordered"][data-bullet="-"] doki-list-item::before {
+  content: "–";
+  margin-right: 0.5em;
+}
+
+doki-list[data-type="unordered"][data-bullet="•"] {
+  list-style-type: none;
+  padding-left: 1em;
+}
+
+doki-list[data-type="unordered"][data-bullet="•"] doki-list-item::before {
+  content: "•";
+  margin-right: 0.5em;
+}
+
+doki-list[data-type="unordered"][data-bullet="*"] {
+  list-style-type: circle;
+}
+
+doki-list[data-type="unordered"][data-bullet="~"] {
+  list-style-type: square;
+}
+
+doki-list[data-type="ordered"] {
+  list-style-type: decimal;
+}
+
+doki-list[data-type="ordered"][data-format="#."] {
+  list-style-type: decimal;
+}
+
+doki-list[data-type="ordered"][data-format="#"] {
+  list-style-type: decimal;
+}
+
+doki-list[data-type="ordered"][data-format="(#)."] {
+  list-style-type: none;
+  counter-reset: doki-counter;
+  padding-left: 1em;
+}
+
+doki-list[data-type="ordered"][data-format="(#)."] doki-list-item::before {
+  content: "(" counter(doki-counter) ").";
+  counter-increment: doki-counter;
+  margin-right: 0.5em;
+}
+
+doki-list[data-type="ordered"][data-format="(#)"] {
+  list-style-type: none;
+  counter-reset: doki-counter;
+  padding-left: 1em;
+}
+
+doki-list[data-type="ordered"][data-format="(#)"] doki-list-item::before {
+  content: "(" counter(doki-counter) ")";
+  counter-increment: doki-counter;
+  margin-right: 0.5em;
+}
+
+doki-list[data-type="ordered"][data-format="(#)-"] {
+  list-style-type: none;
+  counter-reset: doki-counter;
+  padding-left: 1em;
+}
+
+doki-list[data-type="ordered"][data-format="(#)-"] doki-list-item::before {
+  content: "(" counter(doki-counter) ")-";
+  counter-increment: doki-counter;
+  margin-right: 0.5em;
+}
+
+doki-list[data-type="ordered"][data-format="#-"] {
+  list-style-type: none;
+  counter-reset: doki-counter;
+  padding-left: 1em;
+}
+
+doki-list[data-type="ordered"][data-format="#-"] doki-list-item::before {
+  content: counter(doki-counter) "-";
+  counter-increment: doki-counter;
+  margin-right: 0.5em;
+}
+
+doki-list-item {
+  display: list-item;
+  margin: 0.3em 0;
+  line-height: 1.5;
+}
+
+/* Code Copy Button */
+doki-code-block {
+  position: relative;
+}
+
+.doki-copy-button {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 0.3em 0.6em;
+  font-size: 0.8em;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+}
+
+.doki-copy-button:hover {
+  opacity: 1;
+  background: #e9e9e9;
+}
+
+.doki-copy-button.copied {
+  background: #4CAF50;
+  color: white;
+  border-color: #4CAF50;
+}
+
 /* Prettify.js Theme */
 pre .str, code .str { color: #8000ff; } /* string */
 pre .kwd, code .kwd { color: #30b030; } /* keyword */
@@ -316,5 +451,20 @@ pre.prettyprint, code.prettyprint {
   
   doki-danger {
     background-color: brown;
+  }
+  
+  .doki-copy-button {
+    background: #444;
+    border-color: #666;
+    color: #ccc;
+  }
+  
+  .doki-copy-button:hover {
+    background: #555;
+  }
+  
+  .doki-copy-button.copied {
+    background: #388E3C;
+    border-color: #388E3C;
   }
 }
