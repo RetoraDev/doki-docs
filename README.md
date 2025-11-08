@@ -94,5 +94,3 @@ DokiDocs expects some important files to be in their place, following the follow
 # License
 
 - **DokiDocs**: MIT License
-
-- **Prettify.JS**: http://code.google.com/p/google-code-prettify/ - Apache License 2.0
