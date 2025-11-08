@@ -685,8 +685,8 @@ code.hljs {
   font-weight: bold;
 }
 
-  /* Light Theme */
-  :root {
+/* Light Theme */
+:root {
     --highlightjs-base00: #f9f9f9; /* Default Background */
     --highlightjs-base01: #e7eaec; /* Lighter Background */
     --highlightjs-base02: #cceae7; /* Selection Background */
@@ -703,7 +703,7 @@ code.hljs {
     --highlightjs-base0D: #6182b8; /* Functions, Methods */
     --highlightjs-base0E: #7c4dff; /* Keywords, Selectors */
     --highlightjs-base0F: #e53935; /* Deprecated, Embedded Tags */
-  }
+}
 
   /* Dark Theme */
 @media (prefers-color-scheme: dark) {

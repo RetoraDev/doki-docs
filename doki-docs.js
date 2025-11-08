@@ -59,55 +59,53 @@
 
       return element;
     }
-
+    
     createInlineCode(content, args) {
-      const element = this.createCodeBlock(content, args, true);
+      const element = document.createElement("doki-inline-code");
+      const code = document.createElement("code");
+      code.textContent = content;
+      
+      // Set language class for highlight.js
+      if (args.length > 0) {
+        code.className = `language-${args[0]}`;
+      } else {
+        code.className = 'language-plaintext';
+      }
+      
+      code.setAttribute("translate", "no");
+      element.appendChild(code);
+      
       return element;
     }
     
     createCodeBlock(content, args, inline) {
-      const element = document.createElement("doki-code-block-container");
-      
-      const block = document.createElement(inline ? "doki-inline-code" : "doki-code-block");
-      
       if (inline) {
-        // For inline code, just use a <code> element
-        const code = document.createElement("code");
-        code.textContent = content;
-        
-        // Set language class for highlight.js
-        if (args.length > 0) {
-          code.className = `language-${args[0]}`;
-        } else {
-          code.className = 'language-plaintext';
-        }
-        
-        code.setAttribute("translate", "no");
-        block.appendChild(code);
-      } else {
-        // For code blocks, use <pre><code> structure required by Highlight.js
-        const pre = document.createElement("pre");
-        const code = document.createElement("code");
-        
-        // Normalize indentation by removing common leading whitespace
-        const normalizedContent = this.normalizeCodeBlock(content);
-        code.textContent = normalizedContent;
-        
-        // Set language class for highlight.js
-        if (args.length > 0) {
-          code.className = `language-${args[0]}`;
-        } else {
-          code.className = 'language-plaintext';
-        }
-        
-        code.setAttribute("translate", "no");
-        code.setAttribute("data-original-content", normalizedContent);
-        
-        pre.appendChild(code);
-        block.appendChild(pre);
+        return this.createInlineCode(content, args);
       }
       
-      element.inline = inline || false;
+      const element = document.createElement("doki-code-block-container");
+      const block = document.createElement("doki-code-block");
+      
+      // For code blocks, use <pre><code> structure required by Highlight.js
+      const pre = document.createElement("pre");
+      const code = document.createElement("code");
+      
+      // Normalize indentation by removing common leading whitespace
+      const normalizedContent = this.normalizeCodeBlock(content);
+      code.textContent = normalizedContent;
+      
+      // Set language class for highlight.js
+      if (args.length > 0) {
+        code.className = `language-${args[0]}`;
+      } else {
+        code.className = 'language-plaintext';
+      }
+      
+      code.setAttribute("translate", "no");
+      code.setAttribute("data-original-content", normalizedContent);
+      
+      pre.appendChild(code);
+      block.appendChild(pre);
       element.appendChild(block);
       
       return element;
