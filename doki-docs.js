@@ -62,41 +62,57 @@
 
     createInlineCode(content, args) {
       const element = this.createCodeBlock(content, args, true);
-
       return element;
     }
-
+    
     createCodeBlock(content, args, inline) {
       const element = document.createElement("doki-code-block-container");
       
       const block = document.createElement(inline ? "doki-inline-code" : "doki-code-block");
       
-      const code = document.createElement("code");
-      
       if (inline) {
+        // For inline code, just use a <code> element
+        const code = document.createElement("code");
         code.textContent = content;
+        
+        // Set language class for highlight.js
+        if (args.length > 0) {
+          code.className = `language-${args[0]}`;
+        } else {
+          code.className = 'language-plaintext';
+        }
+        
+        code.setAttribute("translate", "no");
+        block.appendChild(code);
       } else {
+        // For code blocks, use <pre><code> structure required by Highlight.js
+        const pre = document.createElement("pre");
+        const code = document.createElement("code");
+        
         // Normalize indentation by removing common leading whitespace
         const normalizedContent = this.normalizeCodeBlock(content);
         code.textContent = normalizedContent;
+        
+        // Set language class for highlight.js
+        if (args.length > 0) {
+          code.className = `language-${args[0]}`;
+        } else {
+          code.className = 'language-plaintext';
+        }
+        
+        code.setAttribute("translate", "no");
+        code.setAttribute("data-original-content", normalizedContent);
+        
+        pre.appendChild(code);
+        block.appendChild(pre);
       }
-
-      if (args.length > 0) {
-        code.className = `language-${args[0]}`;
-      }
-
-      code.className += " prettyprint";
-      code.setAttribute("translate", "no");
-      
-      block.appendChild(code);
       
       element.inline = inline || false;
-      
       element.appendChild(block);
       
       return element;
     }
-    
+
     normalizeCodeBlock(content) {
       if (!content) return '';
       
@@ -377,11 +393,13 @@
     }
 
     applySyntaxHighlighting() {
-      // Get the script element that loaded doki-docs.js
+      this.loadHighlightJS();
+    }
+    
+    loadHighlightJS() {
       const scripts = document.getElementsByTagName('script');
       let scriptPath = '';
       
-      // Find the doki-docs.js script to get its location
       for (let i = 0; i < scripts.length; i++) {
         const src = scripts[i].src;
         if (src && src.includes('doki-docs.js')) {
@@ -390,52 +408,59 @@
         }
       }
       
-      const loadPrettify = (basePath) => {
-        // Load prettify.js dynamically
-        const styleBase = document.createElement('link');
-        styleBase.href = basePath + 'prettify/prettify.css';
-        styleBase.rel = 'stylesheet';
-    
-        const styleCustom = document.createElement('link');
-        styleCustom.href = basePath + 'prettify/theme.css';
-        styleCustom.rel = 'stylesheet';
-    
-        document.head.appendChild(styleBase);
-        document.head.appendChild(styleCustom);
-    
-        const prettify = document.createElement('script');
-        prettify.src = basePath + 'prettify/prettify.js';
-    
-        prettify.onload = () => {
-          const elements = document.getElementsByTagName('code');
-          
-          for (let i = 0; i < elements.length; i++) {
-            const e = elements[i];
-            e.className += ' prettyprint';
-            e.setAttribute('translate', 'no');
-          }
-          
-          this.attachCopyButtons();
-        };
-    
-        prettify.onerror = () => {
-          console.warn('Failed to load prettify from local path, trying CDN fallback...');
-          // Fallback to CDN
-          loadPrettify('https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/');
-        };
-    
-        document.head.appendChild(prettify);
-      };
-    
-      // Start loading from script location
-      if (scriptPath) {
-        loadPrettify(scriptPath);
-      } else {
-        // Fallback to current directory
-        loadPrettify('./');
+      if (!scriptPath) {
+        scriptPath = './';
       }
+    
+      // Try to load local highlight.js files
+      this.tryLoadLocalHighlightJS(scriptPath);
     }
     
+    tryLoadLocalHighlightJS(scriptPath) {
+      const minifiedScript = document.createElement('script');
+      minifiedScript.src = scriptPath + 'highlight.min.js';
+      
+      minifiedScript.onload = () => this.initializeHighlightJS();
+      minifiedScript.onerror = () => {
+        // If minified fails, try non-minified
+        const regularScript = document.createElement('script');
+        regularScript.src = scriptPath + 'highlight.js';
+        
+        regularScript.onload = () => this.initializeHighlightJS();
+        regularScript.onerror = () => {
+          // If both local files fail, load from CDN
+          this.loadHighlightJSFromCDN();
+        };
+        
+        document.head.appendChild(regularScript);
+      };
+      
+      document.head.appendChild(minifiedScript);
+    }
+    
+    loadHighlightJSFromCDN() {
+      const cdnScript = document.createElement('script');
+      cdnScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js';
+      
+      cdnScript.onload = () => this.initializeHighlightJS();
+      cdnScript.onerror = () => {
+        // Final fallback - try older version
+        const fallbackScript = document.createElement('script');
+        fallbackScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js';
+        fallbackScript.onload = () => this.initializeHighlightJS();
+        document.head.appendChild(fallbackScript);
+      };
+      
+      document.head.appendChild(cdnScript);
+    }
+    
+    initializeHighlightJS() {
+      if (window.hljs && typeof window.hljs.highlightAll === 'function') {
+        window.hljs.highlightAll();
+        this.attachCopyButtons();
+      }
+    }
+        
     attachCopyButtons() {
       const codeBlocks = document.querySelectorAll('doki-code-block-container');
       codeBlocks.forEach(block => {
